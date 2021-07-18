@@ -35,9 +35,9 @@
 <section id="example"><h2>Example</h2>
 <pre><code class="language-ruby">require 'async'
 
-condition = Async::Condition.new
-
 Sync do
+	condition = Async::Condition.new
+	
 	Async do
 		Console.logger.info &quot;Waiting for condition...&quot;
 		value = condition.wait
