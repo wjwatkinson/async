@@ -52,7 +52,13 @@
 	<section>
 	<h2>Definitions</h2>
 	
-	<section id="Async::Wrapper#initialize"><h3><code class="language-ruby">def initialize(io, reactor = nil)</code></h3><details>
+	<section id="Async::Wrapper#initialize"><h3><code class="language-ruby">def initialize(io, reactor = nil)</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">reactor</code>　<code class="language-ruby"><a href="../Reactor/index.html" title="Async::Reactor">Reactor</a></code></dt><dd><p>the reactor that is managing this wrapper, or not specified, it's looked up by way of <a href="../Task/index.html#Async%3A%3ATask.current" title="Task.current"><code class="language-ruby">Async::Task.current</code></a>.</p>
+</dd></dl>
+</details>
+<details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def initialize(io, reactor = nil)
 	@io = io
@@ -80,6 +86,12 @@ end</code></pre>
 	@io.to_io.wait_writable(timeout) or raise TimeoutError
 end</code></pre>
 					</details></section><section id="Async::Wrapper#wait_any"><h3><code class="language-ruby">def wait_any(timeout = @timeout)</code></h3><p>Wait fo the io to become either readable or writable.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">duration</code>　<code class="language-ruby">Float</code></dt><dd><p>timeout after the given duration if not <code>nil</code>.</p>
+</dd></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def wait_any(timeout = @timeout)

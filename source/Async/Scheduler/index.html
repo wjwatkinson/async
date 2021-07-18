@@ -278,6 +278,14 @@ end</code></pre>
 	return @selector.process_wait(Fiber.current, pid, flags)
 end</code></pre>
 					</details></section><section id="Async::Scheduler#run_once"><h3><code class="language-ruby">def run_once(timeout = nil)</code></h3><p>Run one iteration of the event loop.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">timeout</code>　<code class="language-ruby">Float | Nil</code></dt><dd><p>the maximum timeout, or if nil, indefinite.</p>
+</dd><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt><dd><p>whether there is more work to do.</p>
+</dd></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def run_once(timeout = nil)
@@ -365,6 +373,10 @@ and this method will return.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
 	<dl><dt>
+					<strong>yields</strong>　<code class="syntax language-ruby">{|task| ...}</code></dt><dd><p>Executed within the task.</p>
+</dd><dt>
+					<strong>returns</strong>　<code class="language-ruby"><a href="../Task/index.html" title="Async::Task">Task</a></code></dt><dd><p>The task that was scheduled into the reactor.</p>
+</dd><dt>
 					<strong>deprecated</strong></dt><dd><p>With no replacement.</p>
 </dd></dl>
 </details>
@@ -386,6 +398,12 @@ and this method will return.</p>
 	return task
 end</code></pre>
 					</details></section><section id="Async::Scheduler#timeout_after"><h3><code class="language-ruby">def timeout_after(timeout, exception = TimeoutError, message = &quot;execution expired&quot;, &amp;block)</code></h3><p>Invoke the block, but after the specified timeout, raise <a href="../TimeoutError/index.html" title="TimeoutError"><code class="language-ruby">class Async::TimeoutError</code></a> in any currenly blocking operation. If the block runs to completion before the timeout occurs or there are no non-blocking operations after the timeout expires, the code will complete without any exception.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">duration</code>　<code class="language-ruby">Numeric</code></dt><dd><p>The time in seconds, in which the task should complete.</p>
+</dd></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def timeout_after(timeout, exception = TimeoutError, message = &quot;execution expired&quot;, &amp;block)

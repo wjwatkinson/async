@@ -68,6 +68,14 @@ end</code></pre>
 	Fiber.scheduler.yield
 end</code></pre>
 					</details></section><section id="Async::Task#initialize"><h3><code class="language-ruby">def initialize(parent = Task.current?, finished: nil, **options, &amp;block)</code></h3><p>Create a new task.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">reactor</code>　<code class="language-ruby"><a href="../Reactor/index.html" title="Async::Reactor">Reactor</a></code></dt><dd><p>the reactor this task will run within.</p>
+</dd><dt>
+					<strong>parameter</strong>　<code class="syntax">parent</code>　<code class="language-ruby"><a href="index.html" title="Async::Task">Task</a></code></dt><dd><p>the parent task.</p>
+</dd></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def initialize(parent = Task.current?, finished: nil, **options, &amp;block)
@@ -125,6 +133,12 @@ end</code></pre>
 	end
 end</code></pre>
 					</details></section><section id="Async::Task#wait"><h3><code class="language-ruby">def wait</code></h3><p>Retrieve the current result of the task. Will cause the caller to wait until result is available.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Object</code></dt><dd><p>The final expression/result of the task's block.</p>
+</dd></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def wait
@@ -172,24 +186,44 @@ end</code></pre>
 	end
 end</code></pre>
 					</details></section><section id="Async::Task.current"><h3><code class="language-ruby">def self.current</code></h3><p>Lookup the <a href="index.html" title="Task"><code class="language-ruby">class Async::Task</code></a> for the current fiber. Raise <code>RuntimeError</code> if none is available.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby"><a href="index.html" title="Async::Task">Task</a></code></dt></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def self.current
 	Thread.current[:async_task] or raise RuntimeError, &quot;No async task available!&quot;
 end</code></pre>
 					</details></section><section id="Async::Task.current?"><h3><code class="language-ruby">def self.current?</code></h3><p>Check if there is a task defined for the current fiber.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Task | Nil</code></dt></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def self.current?
 	Thread.current[:async_task]
 end</code></pre>
 					</details></section><section id="Async::Task#running?"><h3><code class="language-ruby">def running?</code></h3><p>Check if the task is running.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def running?
 	@status == :running
 end</code></pre>
 					</details></section><section id="Async::Task#finished?"><h3><code class="language-ruby">def finished?</code></h3><p>Whether we can remove this node from the reactor graph.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def finished?

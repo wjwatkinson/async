@@ -95,6 +95,12 @@ end</code></pre>
 end</code></pre>
 					</details></section><section id="Async::Semaphore#acquire"><h3><code class="language-ruby">def acquire</code></h3><p>Acquire the semaphore, block if we are at the limit.
 If no block is provided, you must call release manually.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>yields</strong>　<code class="syntax language-ruby">{...}</code></dt><dd><p>When the semaphore can be acquired.</p>
+</dd></dl>
+</details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def acquire
