@@ -46,6 +46,7 @@
 <li><code>Async::Task</code> uses <code>Fiber#transfer</code>for scheduling so it is compatible with all other usage of Fiber.</li>
 <li><code>Async::Reactor</code> implements the Fiber scheduler interface and is compatible with a wide range of non-blocking operations, including DNS, <code>Process.wait</code>, etc.</li>
 <li>External C libraries that use blocking operations may still block.</li>
+<li>Ruby 3.0 has some bugs in the non-blocking thread primitives which have not been backported. Ruby 3.1+ solves these problems.</li>
 </ul>
 </section>
 				
