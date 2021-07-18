@@ -31,22 +31,23 @@
 			
 	<h1><code class="language-ruby">Async::Barrier</code></h1>
 	
-	<ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-		</li>
-</ul>
-
-	
 	<p>A barrier is used to synchronize multiple tasks, waiting for them all to complete before continuing.</p>
+	
+	<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+
 	
 	
 	<section>
 	<h2>Definitions</h2>
 	
-	<section id="Async::Barrier#initialize"><h3><code class="language-ruby">def initialize(parent: nil)</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
+	<section id="Async::Barrier#initialize"><h3><code class="language-ruby">def initialize(parent: nil)</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
 		</li>
 </ul>
 <p>Initialize the barrier.</p>
@@ -54,6 +55,8 @@
 	<summary><h4>Signature</h4></summary>
 	<dl><dt>
 					<strong>parameter</strong>　<code class="syntax">parent</code>　<code class="language-ruby">Task | Semaphore | Nil</code></dt><dd><p>The parent for holding any children tasks.</p>
+</dd><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
 </dd></dl>
 </details>
 <details>
@@ -63,41 +66,24 @@
 	
 	@parent = parent
 end</code></pre>
-					</details></section><section id="Async::Barrier#tasks"><h3><code class="language-ruby">attr :tasks</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-		</li>
-</ul>
-<p>All tasks which have been invoked into the barrier.</p>
-<details open>
-	<summary><h4>Signature</h4></summary>
-	<dl></dl>
-</details>
-</section><section id="Async::Barrier#size"><h3><code class="language-ruby">def size</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-		</li>
-</ul>
-<p>The number of tasks currently held by the barrier.</p>
-<details open>
-	<summary><h4>Signature</h4></summary>
-	<dl></dl>
-</details>
+					</details></section><section id="Async::Barrier#tasks"><h3><code class="language-ruby">attr :tasks</code></h3><p>All tasks which have been invoked into the barrier.</p>
+</section><section id="Async::Barrier#size"><h3><code class="language-ruby">def size</code></h3><p>The number of tasks currently held by the barrier.</p>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def size
 	@tasks.size
 end</code></pre>
-					</details></section><section id="Async::Barrier#async"><h3><code class="language-ruby">def async(*arguments, parent: (@parent or Task.current), **options, &amp;block)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">execution of the given block.</span>
+					</details></section><section id="Async::Barrier#async"><h3><code class="language-ruby">def async(*arguments, parent: (@parent or Task.current), **options, &amp;block)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="Executes the given block concurrently.">
+			asynchronous
 		</li>
 </ul>
 <p>Execute a child task and add it to the barrier.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>Executes the given block concurrently.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -119,16 +105,17 @@ end</code></pre>
 						<pre><code class="language-ruby">def empty?
 	@tasks.empty?
 end</code></pre>
-					</details></section><section id="Async::Barrier#wait"><h3><code class="language-ruby">def wait</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">if there are held tasks.</span>
+					</details></section><section id="Async::Barrier#wait"><h3><code class="language-ruby">def wait</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="Will wait for tasks to finish executing.">
+			asynchronous
 		</li>
 </ul>
 <p>Wait for tasks in FIFO order.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>Will wait for tasks to finish executing.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -137,16 +124,17 @@ end</code></pre>
 		task.wait
 	end
 end</code></pre>
-					</details></section><section id="Async::Barrier#stop"><h3><code class="language-ruby">def stop</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">if there are held tasks.</span>
+					</details></section><section id="Async::Barrier#stop"><h3><code class="language-ruby">def stop</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May wait for tasks to finish executing.">
+			asynchronous
 		</li>
 </ul>
 <p>Stop all tasks held by the barrier.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May wait for tasks to finish executing.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>

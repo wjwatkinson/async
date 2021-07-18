@@ -31,28 +31,30 @@
 			
 	<h1><code class="language-ruby">Async::Task</code></h1>
 	
-	<ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-		</li>
-</ul>
-
-	
 	<p>Encapsulates the state of a running task and it's result.</p>
+	
+	<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+
 	
 	
 	<section>
 	<h2>Definitions</h2>
 	
-	<section id="Async::Task.yield"><h3><code class="language-ruby">def self.yield</code></h3><ul class="pragmas">
-		<li class="pragma deprecated">
-			<span class="directive">deprecated</span>
-			<span class="details">with no replacement.</span>
+	<section id="Async::Task.yield"><h3><code class="language-ruby">def self.yield</code></h3><ul class="pragmas ">
+		<li class="pragma deprecated" title="With no replacement.">
+			deprecated
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>deprecated</strong></dt><dd><p>With no replacement.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -78,45 +80,32 @@ end</code></pre>
 	@block = block
 	@fiber = nil
 end</code></pre>
-					</details></section><section id="Async::Task#reactor"><h3><code class="language-ruby">def reactor</code></h3><ul class="pragmas">
-		<li class="pragma deprecated">
-			<span class="directive">deprecated</span>
-			<span class="details">Prefer to use <a href="../Node/index.html#Async%3A%3ANode%23root" title="Node#root"><code class="language-ruby">Async::Node#root</code></a>.</span>
+					</details></section><section id="Async::Task#sleep"><h3><code class="language-ruby">def sleep(duration = nil)</code></h3><ul class="pragmas ">
+		<li class="pragma deprecated" title="Prefer {Kernel#sleep} except when compatibility with `stable-v1` is required.">
+			deprecated
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
-</details>
-<details>
-						<summary><h4>Implementation</h4></summary>
-						<pre><code class="language-ruby">def reactor
-	self.root
-end</code></pre>
-					</details></section><section id="Async::Task#sleep"><h3><code class="language-ruby">def sleep(duration = nil)</code></h3><ul class="pragmas">
-		<li class="pragma deprecated">
-			<span class="directive">deprecated</span>
-			<span class="details">Prefer #<code class="language-ruby">Kernel#sleep</code>.</span>
-		</li>
-</ul>
-<details open>
-	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>deprecated</strong></dt><dd><p>Prefer <code class="language-ruby">Kernel#sleep</code> except when compatibility with <code>stable-v1</code> is required.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def sleep(duration = nil)
 	super
 end</code></pre>
-					</details></section><section id="Async::Task#with_timeout"><h3><code class="language-ruby">def with_timeout(timeout, exception = TimeoutError, message = &quot;execution expired&quot;, &amp;block)</code></h3><ul class="pragmas">
-		<li class="pragma deprecated">
-			<span class="directive">deprecated</span>
-			<span class="details">Prefer #<a href="../Scheduler/index.html#Async%3A%3AScheduler%23timeout_after" title="Scheduler#timeout_after"><code class="language-ruby">Async::Scheduler#timeout_after</code></a>.</span>
+					</details></section><section id="Async::Task#with_timeout"><h3><code class="language-ruby">def with_timeout(timeout, exception = TimeoutError, message = &quot;execution expired&quot;, &amp;block)</code></h3><ul class="pragmas ">
+		<li class="pragma deprecated" title="Replaced by {Scheduler#timeout_after}.">
+			deprecated
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>deprecated</strong></dt><dd><p>Replaced by <a href="../Scheduler/index.html#Async%3A%3AScheduler%23timeout_after" title="Scheduler#timeout_after"><code class="language-ruby">Async::Scheduler#timeout_after</code></a>.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>

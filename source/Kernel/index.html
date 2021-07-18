@@ -31,22 +31,20 @@
 			
 	<h1><code class="language-ruby">Kernel</code></h1>
 	
-	
-	
 	<p>Extensions to all Ruby objects.</p>
+	
+	
 	
 	
 	<section>
 	<h2>Definitions</h2>
 	
-	<section id="Kernel#Async"><h3><code class="language-ruby">def Async(...)</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-			<span class="details">stable-v1</span>
+	<section id="Kernel#Async"><h3><code class="language-ruby">def Async(...)</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
 		</li>
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">may block until completion.</span>
+		<li class="pragma asynchronous" title="May block until given block completes executing.">
+			asynchronous
 		</li>
 </ul>
 <p>Run the given block of code in a task, asynchronously, creating a reactor if necessary.</p>
@@ -65,7 +63,11 @@ running.</li>
 </dd><dd><dl>
 <dt>
 					<strong>parameter</strong>　<code class="syntax">task</code>　<code class="language-ruby">Async::Task</code></dt><dd><p>The task that is executing the given block.</p>
-</dd>					</dl></dd></dl>
+</dd>					</dl></dd><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd><dt>
+					<strong>asynchronous</strong></dt><dd><p>May block until given block completes executing.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -82,14 +84,12 @@ running.</li>
 		end
 	end
 end</code></pre>
-					</details></section><section id="Kernel#Sync"><h3><code class="language-ruby">def Sync(&amp;block)</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-			<span class="details">stable-v1</span>
+					</details></section><section id="Kernel#Sync"><h3><code class="language-ruby">def Sync(&amp;block)</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
 		</li>
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">will wait until completion.</span>
+		<li class="pragma asynchronous" title="Will block until given block completes executing.">
+			asynchronous
 		</li>
 </ul>
 <p>Run the given block of code synchronously, but within a reactor if not already in one.</p>
@@ -100,7 +100,11 @@ end</code></pre>
 </dd><dd><dl>
 <dt>
 					<strong>parameter</strong>　<code class="syntax">task</code>　<code class="language-ruby">Async::Task</code></dt><dd><p>The task that is executing the given block.</p>
-</dd>					</dl></dd></dl>
+</dd>					</dl></dd><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd><dt>
+					<strong>asynchronous</strong></dt><dd><p>Will block until given block completes executing.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>

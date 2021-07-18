@@ -31,44 +31,45 @@
 			
 	<h1><code class="language-ruby">Async::Condition</code></h1>
 	
-	<ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
-		</li>
-</ul>
+	<p>A synchronization primative, which allows fibers to wait until a particular condition is (edge) triggered. Zero or more fibers can wait on a condition. When the condition is signalled, the fibers will be resumed in order.</p>
+<section id="example"><h2>Example</h2>
+<pre><code class="language-ruby">require 'async'
 
+condition = Async::Condition.new
+
+Sync do
+	Async do
+		Console.logger.info &quot;Waiting for condition...&quot;
+		value = condition.wait
+		Console.logger.info &quot;Condition was signalled: #{value}&quot;
+	end
 	
-	<p>A synchronization primative, which allows fibers to wait until a particular condition is (edge) triggered.</p>
+	Async do |task|
+		task.sleep(1)
+		Console.logger.info &quot;Signalling condition...&quot;
+		condition.signal(&quot;Hello World&quot;)
+	end
+end
+</code></pre>
+</section><section id="output"><h3>Output</h3>
+<pre><code>0.0s     info: Waiting for condition... [ec=0x3c] [pid=47943]
+1.0s     info: Signalling condition... [ec=0x64] [pid=47943]
+1.0s     info: Condition was signalled: Hello World [ec=0x3c] [pid=47943]
+</code></pre>
+</section>	
+	<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+
 	
 	
 	<section>
 	<h2>Definitions</h2>
 	
-	<section id="Async::Condition::Queue"><h3><code class="language-ruby">Queue</code></h3><ul class="pragmas">
-		<li class="pragma private">
-			<span class="directive">private</span>
-		</li>
-</ul>
-<details open>
-	<summary><h4>Signature</h4></summary>
-	<dl></dl>
-</details>
-<details>
-						<summary><h4>Implementation</h4></summary>
-						<pre><code class="language-ruby">Queue = Struct.new(:fiber) do
-	def transfer(*arguments)
-		fiber&amp;.transfer(*arguments)
-	end
-	
-	def alive?
-		fiber&amp;.alive?
-	end
-	
-	def nullify
-		self.fiber = nil
-	end
-end</code></pre>
-					</details></section><section id="Async::Condition#wait"><h3><code class="language-ruby">def wait</code></h3><p>Queue up the current fiber and wait on yielding the task.</p>
+	<section id="Async::Condition#wait"><h3><code class="language-ruby">def wait</code></h3><p>Queue up the current fiber and wait on yielding the task.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
 	<dl><dt>

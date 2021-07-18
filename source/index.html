@@ -32,11 +32,20 @@
 	<h1>Overview</h1>
 	
 	<ul class="index"><li>
-						<a href="Async/index.html"><code class="language-ruby">module Async</code></a>
+						<a href="http://localhost:38491/source/Async/index"><code class="language-ruby">module Async</code></a>
+						
+						
 						
 					
 					<ul class="index"><li>
 						<a href="Async/Barrier/index.html"><code class="language-ruby">class Barrier</code></a>
+						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
 						
 							<p>A barrier is used to synchronize multiple tasks, waiting for them all to complete before continuing.</p>
 
@@ -58,6 +67,13 @@
 									</li></ul>				</li><li>
 						<a href="Async/Clock/index.html"><code class="language-ruby">class Clock</code></a>
 						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
+						
 							<p>A convenient wrapper around the internal monotonic clock.</p>
 
 					
@@ -78,6 +94,13 @@
 									</li></ul>				</li><li>
 						<a href="Async/Condition/index.html"><code class="language-ruby">class Condition</code></a>
 						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
+						
 							<p>A synchronization primative, which allows fibers to wait until a particular condition is (edge) triggered.</p>
 
 					
@@ -87,10 +110,10 @@
 					
 									</li><li>
 					
-									</li><li>
-					
 									</li></ul>				</li><li>
 						<a href="Async/List/index.html"><code class="language-ruby">class List</code></a>
+						
+						
 						
 							<p>A double linked list used for managing tasks.</p>
 
@@ -100,13 +123,17 @@
 									</li></ul>				</li><li>
 						<a href="Async/Children/index.html"><code class="language-ruby">class Children &lt; List</code></a>
 						
+						
+						
 							<p>A list of children tasks.</p>
 
 					
 					<ul class="index"><li>
 					
 									</li></ul>				</li><li>
-						<a href="Async/Node/index.html"><code class="language-ruby">class Node</code></a>
+						<a href="http://localhost:38491/source/Async/Node/index"><code class="language-ruby">class Node</code></a>
+						
+						
 						
 							<p>A node in a tree, used for implementing the task hierarchy.</p>
 
@@ -139,8 +166,17 @@
 					
 									</li><li>
 					
+									</li><li>
+					
 									</li></ul>				</li><li>
 						<a href="Async/Notification/index.html"><code class="language-ruby">class Notification &lt; Condition</code></a>
+						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
 						
 							<p>A synchronization primitive, which allows fibers to wait until a notification is received. Does not block the task which signals the notification. Waiting tasks are resumed on next iteration of the reactor.</p>
 
@@ -150,17 +186,33 @@
 									</li></ul>				</li><li>
 						<a href="Async/Queue/index.html"><code class="language-ruby">class Queue &lt; Notification</code></a>
 						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
+						
 							<p>A queue which allows items to be processed in order.</p>
 
 					
 					<ul class="index"></ul>				</li><li>
-						<a href="http://localhost:36303/source/Async/LimitedQueue/index"><code class="language-ruby">class LimitedQueue &lt; Queue</code></a>
+						<a href="http://localhost:38491/source/Async/LimitedQueue/index"><code class="language-ruby">class LimitedQueue &lt; Queue</code></a>
+						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
 						
 					
 					<ul class="index"><li>
 					
 									</li></ul>				</li><li>
 						<a href="Async/Reactor/index.html"><code class="language-ruby">class Reactor &lt; Scheduler</code></a>
+						
+						
 						
 							<p>A wrapper around the the scheduler which binds it to the current thread automatically.</p>
 
@@ -169,6 +221,8 @@
 					
 									</li></ul>				</li><li>
 						<a href="Async/Scheduler/index.html"><code class="language-ruby">class Scheduler &lt; Node</code></a>
+						
+						
 						
 							<p>Handles scheduling of fibers. Implements the fiber scheduler interface.</p>
 
@@ -212,6 +266,13 @@
 									</li></ul>				</li><li>
 						<a href="Async/Semaphore/index.html"><code class="language-ruby">class Semaphore</code></a>
 						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
+						
 							<p>A synchronization primative, which limits access to a given resource.</p>
 
 					
@@ -238,21 +299,39 @@
 									</li></ul>				</li><li>
 						<a href="Async/Stop/index.html"><code class="language-ruby">class Stop &lt; Exception</code></a>
 						
+						
+						
 							<p>Raised when a task is explicitly stopped.</p>
 
 					
 					<ul class="index"><li>
-						<a href="Async/Stop/Later/index.html"><code class="language-ruby">class Later</code></a>
+						<a href="http://localhost:38491/source/Async/Stop/Later/index"><code class="language-ruby">class Later</code></a>
+						
+						
 						
 					
 					<ul class="index"></ul>				</li></ul>				</li><li>
 						<a href="Async/TimeoutError/index.html"><code class="language-ruby">class TimeoutError &lt; StandardError</code></a>
+						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
 						
 							<p>Raised if a timeout occurs on a specific Fiber. Handled gracefully by <code>Task</code>.</p>
 
 					
 					<ul class="index"></ul>				</li><li>
 						<a href="Async/Task/index.html"><code class="language-ruby">class Task &lt; Node</code></a>
+						
+						<ul class="pragmas inline">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+
 						
 							<p>Encapsulates the state of a running task and it's result.</p>
 
@@ -291,16 +370,23 @@
 					
 									</li><li>
 					
-									</li><li>
-					
 									</li></ul>				</li><li>
 						<a href="Async/Wrapper/index.html"><code class="language-ruby">class Wrapper</code></a>
+						
+						<ul class="pragmas inline">
+		<li class="pragma deprecated" title="With no replacement. Prefer native interfaces.">
+			deprecated
+		</li>
+</ul>
+
 						
 							<p>Represents an asynchronous IO within a reactor.</p>
 
 					
 					<ul class="index"><li>
 						<a href="Async/Wrapper/Cancelled/index.html"><code class="language-ruby">class Cancelled &lt; StandardError</code></a>
+						
+						
 						
 							<p>An exception that occurs when the asynchronous operation was cancelled.</p>
 
@@ -321,6 +407,8 @@
 					
 									</li></ul>				</li></ul>				</li><li>
 						<a href="Kernel/index.html"><code class="language-ruby">module Kernel</code></a>
+						
+						
 						
 							<p>Extensions to all Ruby objects.</p>
 

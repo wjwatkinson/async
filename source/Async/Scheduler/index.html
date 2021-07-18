@@ -31,23 +31,25 @@
 			
 	<h1><code class="language-ruby">Async::Scheduler</code></h1>
 	
-	
-	
 	<p>Handles scheduling of fibers. Implements the fiber scheduler interface.</p>
+	
+	
 	
 	
 	<section>
 	<h2>Definitions</h2>
 	
-	<section id="Async::Scheduler.supported?"><h3><code class="language-ruby">def self.supported?</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
+	<section id="Async::Scheduler.supported?"><h3><code class="language-ruby">def self.supported?</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
 		</li>
 </ul>
 <p>Whether the fiber scheduler is supported.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -55,14 +57,16 @@
 	true
 end</code></pre>
 					</details></section><section id="Async::Scheduler::URGENT"><h3><code class="language-ruby">URGENT = 1</code></h3><p>Used for indicating an urgent interrupt.</p>
-</section><section id="Async::Scheduler#close"><h3><code class="language-ruby">def close</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
+</section><section id="Async::Scheduler#close"><h3><code class="language-ruby">def close</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -82,14 +86,18 @@ end</code></pre>
 	
 	consume
 end</code></pre>
-					</details></section><section id="Async::Scheduler#closed?"><h3><code class="language-ruby">def closed?</code></h3><ul class="pragmas">
-		<li class="pragma public">
-			<span class="directive">public</span>
+					</details></section><section id="Async::Scheduler#closed?"><h3><code class="language-ruby">def closed?</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt><dd><p>Whether the scheduler has been closed.</p>
+</dd><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -126,16 +134,17 @@ end</code></pre>
 						<pre><code class="language-ruby">def push(fiber)
 	@selector.push(fiber)
 end</code></pre>
-					</details></section><section id="Async::Scheduler#block"><h3><code class="language-ruby">def block(blocker, timeout)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">not thread safe.</span>
+					</details></section><section id="Async::Scheduler#block"><h3><code class="language-ruby">def block(blocker, timeout)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May only be called on same thread as fiber scheduler.">
+			asynchronous
 		</li>
 </ul>
 <p>Invoked when a fiber tries to perform a blocking operation which cannot continue. A corresponding call <a href="index.html#Async%3A%3AScheduler%23unblock" title="unblock"><code class="language-ruby">Async::Scheduler#unblock</code></a> must be performed to allow this fiber to continue.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May only be called on same thread as fiber scheduler.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -160,15 +169,16 @@ end</code></pre>
 ensure
 	timer&amp;.cancel
 end</code></pre>
-					</details></section><section id="Async::Scheduler#unblock"><h3><code class="language-ruby">def unblock(blocker, fiber)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">thread safe.</span>
+					</details></section><section id="Async::Scheduler#unblock"><h3><code class="language-ruby">def unblock(blocker, fiber)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be called from any thread.">
+			asynchronous
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be called from any thread.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -180,45 +190,48 @@ end</code></pre>
 		@interrupt&amp;.signal
 	end
 end</code></pre>
-					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">non-blocking.</span>
+					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def kernel_sleep(duration)
 	self.block(nil, duration)
 end</code></pre>
-					</details></section><section id="Async::Scheduler#address_resolve"><h3><code class="language-ruby">def address_resolve(hostname)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">non-blocking.</span>
+					</details></section><section id="Async::Scheduler#address_resolve"><h3><code class="language-ruby">def address_resolve(hostname)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def address_resolve(hostname)
 	::Resolv.getaddresses(hostname)
 end</code></pre>
-					</details></section><section id="Async::Scheduler#io_wait"><h3><code class="language-ruby">def io_wait(io, events, timeout = nil)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">non-blocking.</span>
+					</details></section><section id="Async::Scheduler#io_wait"><h3><code class="language-ruby">def io_wait(io, events, timeout = nil)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
 		</li>
 </ul>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
@@ -241,10 +254,9 @@ rescue TimeoutError
 ensure
 	timer&amp;.cancel
 end</code></pre>
-					</details></section><section id="Async::Scheduler#process_wait"><h3><code class="language-ruby">def process_wait(pid, flags)</code></h3><ul class="pragmas">
-		<li class="pragma asynchronous">
-			<span class="directive">asynchronous</span>
-			<span class="details">non-blocking.</span>
+					</details></section><section id="Async::Scheduler#process_wait"><h3><code class="language-ruby">def process_wait(pid, flags)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
 		</li>
 </ul>
 <p>Wait for the specified process ID to exit.</p>
@@ -256,6 +268,8 @@ end</code></pre>
 					<strong>parameter</strong>　<code class="syntax">flags</code>　<code class="language-ruby">Integer</code></dt><dd><p>A bit-mask of flags suitable for <code>Process::Status.wait</code>.</p>
 </dd><dt>
 					<strong>returns</strong>　<code class="language-ruby">Process::Status</code></dt><dd><p>A process status instance.</p>
+</dd><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
 </dd></dl>
 </details>
 <details>
@@ -339,10 +353,9 @@ end</code></pre>
 ensure
 	Console.logger.debug(self) {&quot;Exiting run-loop because #{$! ? $! : 'finished'}.&quot;}
 end</code></pre>
-					</details></section><section id="Async::Scheduler#async"><h3><code class="language-ruby">def async(*arguments, **options, &amp;block)</code></h3><ul class="pragmas">
-		<li class="pragma deprecated">
-			<span class="directive">deprecated</span>
-			<span class="details">with no replacement.</span>
+					</details></section><section id="Async::Scheduler#async"><h3><code class="language-ruby">def async(*arguments, **options, &amp;block)</code></h3><ul class="pragmas ">
+		<li class="pragma deprecated" title="With no replacement.">
+			deprecated
 		</li>
 </ul>
 <p>Start an asynchronous task within the specified reactor. The task will be
@@ -351,7 +364,9 @@ and this method will return.</p>
 <p>This is the main entry point for scheduling asynchronus tasks.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
-	<dl></dl>
+	<dl><dt>
+					<strong>deprecated</strong></dt><dd><p>With no replacement.</p>
+</dd></dl>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>

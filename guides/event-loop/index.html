@@ -70,7 +70,7 @@ end
 <p><code>Async::Reactor#run</code> will run until the reactor runs out of work to do. To run a single iteration of the reactor, use <code>Async::Reactor#run_once</code></p>
 <pre><code class="language-ruby">require 'async'
 
-Async.logger.debug!
+Console.logger.debug!
 reactor = Async::Reactor.new
 
 # Run the reactor for 1 second:
