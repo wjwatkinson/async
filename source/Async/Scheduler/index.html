@@ -188,13 +188,10 @@ end</code></pre>
 						<pre><code class="language-ruby">def unblock(blocker, fiber)
 	# $stderr.puts &quot;unblock(#{blocker}, #{fiber})&quot;
 	
-	# We depend on GVL to ensure consistency:
-	# @guard.synchronize do
+	# This operation is protected by the GVL:
+	@selector.push(fiber)
 	
-	@unblocked &lt;&lt; fiber
 	@interrupt&amp;.signal
-	
-	# end
 end</code></pre>
 					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration = nil)</code></h3><ul class="pragmas ">
 		<li class="pragma asynchronous" title="May be non-blocking..">
@@ -301,22 +298,7 @@ end</code></pre>
 						<pre><code class="language-ruby">def run_once(timeout = nil)
 	Kernel::raise &quot;Running scheduler on non-blocking fiber!&quot; unless Fiber.blocking?
 	
-	if @unblocked.any?
-		unblocked = Array.new
-		
-		# We depend on GVL for consistency:
-		# @guard.synchronize do
-		
-		unblocked, @unblocked = @unblocked, unblocked
-		
-		#end
-			
-		while fiber = unblocked.pop
-			fiber.transfer if fiber.alive?
-		end
-	end
-	
-	if !@selector.ready? and @unblocked.empty?
+	unless @selector.ready?
 		interval = @timers.wait_interval
 	else
 		# if there are tasks ready to execute, don't sleep:
