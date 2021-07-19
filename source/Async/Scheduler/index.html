@@ -287,9 +287,9 @@ end</code></pre>
 <details open>
 	<summary><h4>Signature</h4></summary>
 	<dl><dt>
-					<strong>parameter</strong>　<code class="syntax">timeout</code>　<code class="language-ruby">Float | Nil</code></dt><dd><p>the maximum timeout, or if nil, indefinite.</p>
+					<strong>parameter</strong>　<code class="syntax">timeout</code>　<code class="language-ruby">Float | Nil</code></dt><dd><p>The maximum timeout, or if nil, indefinite.</p>
 </dd><dt>
-					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt><dd><p>whether there is more work to do.</p>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt><dd><p>Whether there is more work to do.</p>
 </dd></dl>
 </details>
 <details>
@@ -297,17 +297,12 @@ end</code></pre>
 						<pre><code class="language-ruby">def run_once(timeout = nil)
 	Kernel::raise &quot;Running scheduler on non-blocking fiber!&quot; unless Fiber.blocking?
 	
-	unless @selector.ready?
-		interval = @timers.wait_interval
-	else
-		# if there are tasks ready to execute, don't sleep:
-		interval = 0
-	end
-	
 	# If we are finished, we stop the task tree and exit:
 	if self.finished?
 		return false
 	end
+	
+	interval = @timers.wait_interval
 	
 	# If there is no interval to wait (thus no timers), and no tasks, we could be done:
 	if interval.nil?
