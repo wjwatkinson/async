@@ -76,13 +76,16 @@ end</code></pre>
 	
 	Kernel::raise &quot;Closing scheduler with blocked operations!&quot; if @blocked &gt; 0
 	
-	@guard.synchronize do
-		@interrupt&amp;.close
-		@interrupt = nil
-		
-		@selector&amp;.close
-		@selector = nil
-	end
+	# We depend on GVL for consistency:
+	# @guard.synchronize do
+	
+	@interrupt&amp;.close
+	@interrupt = nil
+	
+	@selector&amp;.close
+	@selector = nil
+	
+	# end
 	
 	consume
 end</code></pre>
@@ -185,10 +188,13 @@ end</code></pre>
 						<pre><code class="language-ruby">def unblock(blocker, fiber)
 	# $stderr.puts &quot;unblock(#{blocker}, #{fiber})&quot;
 	
-	@guard.synchronize do
-		@unblocked &lt;&lt; fiber
-		@interrupt&amp;.signal
-	end
+	# We depend on GVL to ensure consistency:
+	# @guard.synchronize do
+	
+	@unblocked &lt;&lt; fiber
+	@interrupt&amp;.signal
+	
+	# end
 end</code></pre>
 					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration = nil)</code></h3><ul class="pragmas ">
 		<li class="pragma asynchronous" title="May be non-blocking..">
@@ -298,9 +304,12 @@ end</code></pre>
 	if @unblocked.any?
 		unblocked = Array.new
 		
-		@guard.synchronize do
-			unblocked, @unblocked = @unblocked, unblocked
-		end
+		# We depend on GVL for consistency:
+		# @guard.synchronize do
+		
+		unblocked, @unblocked = @unblocked, unblocked
+		
+		#end
 			
 		while fiber = unblocked.pop
 			fiber.transfer if fiber.alive?
