@@ -190,8 +190,7 @@ end</code></pre>
 	
 	# This operation is protected by the GVL:
 	@selector.push(fiber)
-	
-	@interrupt&amp;.signal
+	@interrupt.signal
 end</code></pre>
 					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration = nil)</code></h3><ul class="pragmas ">
 		<li class="pragma asynchronous" title="May be non-blocking..">
