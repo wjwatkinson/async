@@ -108,7 +108,7 @@ end</code></pre>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def interrupt
-	@interrupt.signal(URGENT)
+	@interrupt&amp;.signal(URGENT)
 end</code></pre>
 					</details></section><section id="Async::Scheduler#transfer"><h3><code class="language-ruby">def transfer</code></h3><p>Transfer from the calling fiber to the event loop.</p>
 <details>
@@ -190,7 +190,7 @@ end</code></pre>
 		@interrupt&amp;.signal
 	end
 end</code></pre>
-					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration)</code></h3><ul class="pragmas ">
+					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration = nil)</code></h3><ul class="pragmas ">
 		<li class="pragma asynchronous" title="May be non-blocking..">
 			asynchronous
 		</li>
@@ -203,8 +203,12 @@ end</code></pre>
 </details>
 <details>
 						<summary><h4>Implementation</h4></summary>
-						<pre><code class="language-ruby">def kernel_sleep(duration)
-	self.block(nil, duration)
+						<pre><code class="language-ruby">def kernel_sleep(duration = nil)
+	if duration
+		self.block(nil, duration)
+	else
+		self.transfer
+	end
 end</code></pre>
 					</details></section><section id="Async::Scheduler#address_resolve"><h3><code class="language-ruby">def address_resolve(hostname)</code></h3><ul class="pragmas ">
 		<li class="pragma asynchronous" title="May be non-blocking..">
