@@ -336,9 +336,7 @@ end</code></pre>
 	
 	Thread.handle_interrupt(Interrupt =&gt; :never) do
 		while self.run_once
-			begin
-				Thread.handle_interrupt(Interrupt =&gt; :immediate) {}
-			rescue Interrupt
+			if Thread.pending_interrupt?
 				break
 			end
 		end
