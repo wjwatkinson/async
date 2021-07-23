@@ -36,7 +36,7 @@
 <p>The <code>stable-v1</code> branch of async is compatible with Ruby 2.5+ &amp; TruffleRuby, and partially compatible with JRuby.</p>
 <p>Because it was designed with the interfaces available in Ruby 2.x, the following limitations apply:</p>
 <ul>
-<li><a href="../../source/Async/Task/index.html" title="Async::Task"><code class="language-ruby">class Async::Task</code></a> implements context switching using <code class="language-ruby">Fiber.yield</code> and <code class="language-ruby">Fiber.resume</code>. This means that <a href="http://localhost:36727/source/Async/index" title="Async"><code class="language-ruby">module Async</code></a> may not be compatible with code which uses fibers for flow control, e.g. <code class="language-ruby">Enumerator</code>.</li>
+<li><a href="../../source/Async/Task/index.html" title="Async::Task"><code class="language-ruby">class Async::Task</code></a> implements context switching using <code class="language-ruby">Fiber.yield</code> and <code class="language-ruby">Fiber.resume</code>. This means that <a href="http://localhost:42815/source/Async/index" title="Async"><code class="language-ruby">module Async</code></a> may not be compatible with code which uses fibers for flow control, e.g. <code class="language-ruby">Enumerator</code>.</li>
 <li><a href="../../source/Async/Reactor/index.html" title="Async::Reactor"><code class="language-ruby">class Async::Reactor</code></a> is unable to intercept blocking operations with native interfaces. You need to use the wrappers provided by <code class="language-ruby">Async::IO</code>.</li>
 <li>DNS resolution is blocking.</li>
 </ul>

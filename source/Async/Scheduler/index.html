@@ -56,8 +56,7 @@
 						<pre><code class="language-ruby">def self.supported?
 	true
 end</code></pre>
-					</details></section><section id="Async::Scheduler::URGENT"><h3><code class="language-ruby">URGENT = 1</code></h3><p>Used for indicating an urgent interrupt.</p>
-</section><section id="Async::Scheduler#close"><h3><code class="language-ruby">def close</code></h3><ul class="pragmas ">
+					</details></section><section id="Async::Scheduler#close"><h3><code class="language-ruby">def close</code></h3><ul class="pragmas ">
 		<li class="pragma public" title="Since `stable-v1`.">
 			public
 		</li>
@@ -111,7 +110,7 @@ end</code></pre>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def interrupt
-	@interrupt&amp;.signal(URGENT)
+	@thread.raise(Interrupt)
 end</code></pre>
 					</details></section><section id="Async::Scheduler#transfer"><h3><code class="language-ruby">def transfer</code></h3><p>Transfer from the calling fiber to the event loop.</p>
 <details>
@@ -190,7 +189,7 @@ end</code></pre>
 	
 	# This operation is protected by the GVL:
 	@selector.push(fiber)
-	@interrupt.signal
+	@thread.wakeup
 end</code></pre>
 					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration = nil)</code></h3><ul class="pragmas ">
 		<li class="pragma asynchronous" title="May be non-blocking..">
@@ -324,13 +323,6 @@ end</code></pre>
 	
 	@timers.fire
 	
-	# We check and clear the interrupted flag here:
-	if @interrupted
-		@interrupted = false
-		
-		return false
-	end
-	
 	# The reactor still has work to do:
 	return true
 end</code></pre>
@@ -342,8 +334,14 @@ end</code></pre>
 	
 	initial_task = self.async(...) if block_given?
 	
-	while self.run_once
-		# Round and round we go!
+	Thread.handle_interrupt(Interrupt =&gt; :never) do
+		while self.run_once
+			begin
+				Thread.handle_interrupt(Interrupt =&gt; :immediate) {}
+			rescue Interrupt
+				break
+			end
+		end
 	end
 	
 	return initial_task
