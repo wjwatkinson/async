@@ -139,7 +139,7 @@ end</code></pre>
 			asynchronous
 		</li>
 </ul>
-<p>Wait for tasks in FIFO order.</p>
+<p>Wait for all tasks.</p>
 <details open>
 	<summary><h4>Signature</h4></summary>
 	<dl><dt>
@@ -149,8 +149,16 @@ end</code></pre>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def wait
-	while task = @tasks.shift
-		task.wait
+	# TODO: This would be better with linked list.
+	while @tasks.any?
+		task = @tasks.first
+		
+		begin
+			task.wait
+		ensure
+			# Remove the task from the waiting list if it's finished:
+			@tasks.shift if @tasks.first == task
+		end
 	end
 end</code></pre>
 					</details></section><section id="Async::Barrier#stop"><h3><code class="language-ruby">def stop</code></h3><ul class="pragmas ">
@@ -168,9 +176,9 @@ end</code></pre>
 <details>
 						<summary><h4>Implementation</h4></summary>
 						<pre><code class="language-ruby">def stop
-	while task = @tasks.shift
-		task.stop
-	end
+	# We have to be careful to avoid enumerating tasks while adding/removing to it:
+	tasks = @tasks.dup
+	tasks.each(&amp;:stop)
 end</code></pre>
 					</details></section>	</section>
 	
