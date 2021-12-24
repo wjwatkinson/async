@@ -34,6 +34,14 @@ module Async
 			Fiber.set_scheduler(self)
 		end
 		
+		def close
+			if Fiber.scheduler == self
+				Fiber.set_scheduler(nil)
+			else
+				raise RuntimeError, "Scheduler is not current!"
+			end
+		end
+		
 		alias with_timeout timeout_after
 		public :sleep
 	end

@@ -48,7 +48,7 @@ module Async
 		end
 		
 		# @public Since `stable-v1`.
-		def close
+		def scheduler_close
 			# This is a critical step. Because tasks could be stored as instance variables, and since the reactor is (probably) going out of scope, we need to ensure they are stopped. Otherwise, the tasks will belong to a reactor that will never run again and are not stopped.
 			self.terminate
 			
