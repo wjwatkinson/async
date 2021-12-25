@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Async::Semaphore</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../../_components/jquery/jquery.min.js"></script>
+		<script src="../../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		
+		<script src="../../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//<![CDATA[
+			jQuery(function($) {
+				$.syntax();
+			});
+		//]]>
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../../index.html">Project</a> › <a class="link" href="../../index.html">Source</a></header>
+		
+		<main>
+			
+	<h1><code class="language-ruby">Async::Semaphore</code></h1>
+	
+	<p>A synchronization primitive, which limits access to a given resource, such as a limited number of database connections, open files, or network connections.</p>
+<section id="example"><h2>Example</h2>
+<pre><code class="language-ruby">require 'async'
+require 'async/semaphore'
+require 'net/http'
+
+Sync do
+	# Only allow two concurrent tasks at a time:
+	semaphore = Async::Semaphore.new(2)
+	
+	# Generate an array of 10 numbers:
+	terms = ['ruby', 'python', 'go', 'java', 'c++'] 
+	
+	# Search for the terms:
+	terms.each do |term|
+		semaphore.async do |task|
+			Console.logger.info(&quot;Searching for #{term}...&quot;)
+			response = Net::HTTP.get(URI &quot;https://www.google.com/search?q=#{term}&quot;)
+			Console.logger.info(&quot;Got response #{response.size} bytes.&quot;)
+		end
+	end
+end
+</code></pre>
+</section><section id="output"><h3>Output</h3>
+<pre><code>0.0s     info: Searching for ruby... [ec=0x3c] [pid=50523]
+0.04s     info: Searching for python... [ec=0x21c] [pid=50523]
+1.7s     info: Got response 182435 bytes. [ec=0x3c] [pid=50523]
+1.71s     info: Searching for go... [ec=0x834] [pid=50523]
+3.0s     info: Got response 204854 bytes. [ec=0x21c] [pid=50523]
+3.0s     info: Searching for java... [ec=0xf64] [pid=50523]
+4.32s     info: Got response 103235 bytes. [ec=0x834] [pid=50523]
+4.32s     info: Searching for c++... [ec=0x12d4] [pid=50523]
+4.65s     info: Got response 109697 bytes. [ec=0xf64] [pid=50523]
+6.64s     info: Got response 87249 bytes. [ec=0x12d4] [pid=50523]
+</code></pre>
+</section>	
+	<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+
+	
+	
+	<section>
+	<h2>Definitions</h2>
+	
+	<section id="Async::Semaphore#initialize"><h3><code class="language-ruby">def initialize(limit = 1, parent: nil)</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">limit</code>　<code class="language-ruby">Integer</code></dt><dd><p>The maximum number of times the semaphore can be acquired before it blocks.</p>
+</dd><dt>
+					<strong>parameter</strong>　<code class="syntax">parent</code>　<code class="language-ruby">Task | Semaphore | Nil</code></dt><dd><p>The parent for holding any children tasks.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def initialize(limit = 1, parent: nil)
+	@count = 0
+	@limit = limit
+	@waiting = []
+	
+	@parent = parent
+end</code></pre>
+					</details></section><section id="Async::Semaphore#count"><h3><code class="language-ruby">attr :count</code></h3><p>The current number of tasks that have acquired the semaphore.</p>
+</section><section id="Async::Semaphore#limit"><h3><code class="language-ruby">attr :limit</code></h3><p>The maximum number of tasks that can acquire the semaphore.</p>
+</section><section id="Async::Semaphore#waiting"><h3><code class="language-ruby">attr :waiting</code></h3><p>The tasks waiting on this semaphore.</p>
+</section><section id="Async::Semaphore#empty?"><h3><code class="language-ruby">def empty?</code></h3><p>Is the semaphore currently acquired?</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def empty?
+	@count.zero?
+end</code></pre>
+					</details></section><section id="Async::Semaphore#blocking?"><h3><code class="language-ruby">def blocking?</code></h3><p>Whether trying to acquire this semaphore would block.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def blocking?
+	@count &gt;= @limit
+end</code></pre>
+					</details></section><section id="Async::Semaphore#async"><h3><code class="language-ruby">def async(*arguments, parent: (@parent or Task.current), **options)</code></h3><p>Run an async task. Will wait until the semaphore is ready until spawning and running the task.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def async(*arguments, parent: (@parent or Task.current), **options)
+	wait
+	
+	parent.async(**options) do |task|
+		@count += 1
+		
+		begin
+			yield task, *arguments
+		ensure
+			self.release
+		end
+	end
+end</code></pre>
+					</details></section><section id="Async::Semaphore#acquire"><h3><code class="language-ruby">def acquire</code></h3><p>Acquire the semaphore, block if we are at the limit.
+If no block is provided, you must call release manually.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>yields</strong>　<code class="syntax language-ruby">{...}</code></dt><dd><p>When the semaphore can be acquired.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def acquire
+	wait
+	
+	@count += 1
+	
+	return unless block_given?
+	
+	begin
+		return yield
+	ensure
+		self.release
+	end
+end</code></pre>
+					</details></section><section id="Async::Semaphore#release"><h3><code class="language-ruby">def release</code></h3><p>Release the semaphore. Must match up with a corresponding call to <code>acquire</code>. Will release waiting fibers in FIFO order.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def release
+	@count -= 1
+	
+	while (@limit - @count) &gt; 0 and fiber = @waiting.shift
+		if fiber.alive?
+			Fiber.scheduler.resume(fiber)
+		end
+	end
+end</code></pre>
+					</details></section><section id="Async::Semaphore#wait"><h3><code class="language-ruby">def wait</code></h3><p>Wait until the semaphore becomes available.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def wait
+	fiber = Fiber.current
+	
+	if blocking?
+		@waiting &lt;&lt; fiber
+		Fiber.scheduler.transfer while blocking?
+	end
+rescue Exception
+	@waiting.delete(fiber)
+	raise
+end</code></pre>
+					</details></section>	</section>
+	
+	<section>
+<h2>Discussion</h2>
+<script src="https://giscus.app/client.js" data-repo="socketry/async" data-repo-id="MDEwOlJlcG9zaXRvcnk4NzM4MDQ4Mw==" data-category="Documentation" data-category-id="DIC_kwDOBTVSA84B-XEu" data-mapping="title" data-reactions-enabled="0" data-emit-metadata="0" data-theme="preferred_color_scheme" crossorigin="anonymous" async>
+</script>
+</section>
+
+
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>

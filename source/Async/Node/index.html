@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Async::Node</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../../_components/jquery/jquery.min.js"></script>
+		<script src="../../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		
+		<script src="../../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//<![CDATA[
+			jQuery(function($) {
+				$.syntax();
+			});
+		//]]>
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../../index.html">Project</a> › <a class="link" href="../../index.html">Source</a></header>
+		
+		<main>
+			
+	<h1><code class="language-ruby">Async::Node</code></h1>
+	
+	<p>A node in a tree, used for implementing the task hierarchy.</p>
+	
+	
+	
+	
+	<section>
+	<h2>Definitions</h2>
+	
+	<section id="Async::Node#initialize"><h3><code class="language-ruby">def initialize(parent = nil, annotation: nil, transient: false)</code></h3><p>Create a new node in the tree.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">parent</code>　<code class="language-ruby">Node | Nil</code></dt><dd><p>This node will attach to the given parent.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def initialize(parent = nil, annotation: nil, transient: false)
+	@parent = nil
+	@children = nil
+	
+	@annotation = annotation
+	@object_name = nil
+	
+	@transient = transient
+	
+	@head = nil
+	@tail = nil
+	
+	if parent
+		parent.add_child(self)
+	end
+end</code></pre>
+					</details></section><section id="Async::Node#root"><h3><code class="language-ruby">def root</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby"><a href="index.html" title="Async::Node">Node</a></code></dt><dd><p>the root node in the hierarchy.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def root
+	@parent&amp;.root || self
+end</code></pre>
+					</details></section><section id="Async::Node#head"><h3><code class="language-ruby">attr_accessor :head</code></h3><ul class="pragmas ">
+		<li class="pragma private" title="">
+			private
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>private</strong></dt></dl>
+</details>
+</section><section id="Async::Node#tail"><h3><code class="language-ruby">attr_accessor :tail</code></h3><ul class="pragmas ">
+		<li class="pragma private" title="">
+			private
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>private</strong></dt></dl>
+</details>
+</section><section id="Async::Node#parent"><h3><code class="language-ruby">attr :parent</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>attribute</strong>　<code class="language-ruby"><a href="index.html" title="Async::Node">Node</a></code></dt><dd><p>The parent node.</p>
+</dd></dl>
+</details>
+</section><section id="Async::Node#children"><h3><code class="language-ruby">attr :children</code></h3></section><section id="Async::Node#annotation"><h3><code class="language-ruby">attr :annotation</code></h3><p>A useful identifier for the current node.</p>
+</section><section id="Async::Node#children?"><h3><code class="language-ruby">def children?</code></h3><p>Whether there are children?</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def children?
+	@children != nil &amp;&amp; !@children.empty?
+end</code></pre>
+					</details></section><section id="Async::Node#transient?"><h3><code class="language-ruby">def transient?</code></h3><p>Is this node transient?</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def transient?
+	@transient
+end</code></pre>
+					</details></section><section id="Async::Node#parent="><h3><code class="language-ruby">def parent=(parent)</code></h3><p>Change the parent of this node.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">parent</code>　<code class="language-ruby">Node | Nil</code></dt><dd><p>the parent to attach to, or nil to detach.</p>
+</dd><dt>
+					<strong>returns</strong>　<code class="language-ruby"><a href="index.html" title="Async::Node">Node</a></code></dt><dd><p>Itself.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def parent=(parent)
+	return if @parent.equal?(parent)
+	
+	if @parent
+		@parent.delete_child(self)
+		@parent = nil
+	end
+	
+	if parent
+		parent.add_child(self)
+	end
+	
+	return self
+end</code></pre>
+					</details></section><section id="Async::Node#finished?"><h3><code class="language-ruby">def finished?</code></h3><p>Whether the node can be consumed safely. By default, checks if the
+children set is empty.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def finished?
+	@children.nil? || @children.finished?
+end</code></pre>
+					</details></section><section id="Async::Node#consume"><h3><code class="language-ruby">def consume</code></h3><p>If the node has a parent, and is <a href="index.html#Async%3A%3ANode%23finished%3F" title="finished?"><code class="language-ruby">Async::Node#finished?</code></a>, then remove this node from
+the parent.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def consume
+	if parent = @parent and finished?
+		parent.delete_child(self)
+		
+		if @children
+			@children.each do |child|
+				if child.finished?
+					delete_child(child)
+				else
+					# In theory we don't need to do this... because we are throwing away the list. However, if you don't correctly update the list when moving the child to the parent, it foobars the enumeration, and subsequent nodes will be skipped, or in the worst case you might start enumerating the parents nodes.
+					delete_child(child)
+					parent.add_child(child)
+				end
+			end
+			
+			@children = nil
+		end
+		
+		parent.consume
+	end
+end</code></pre>
+					</details></section><section id="Async::Node#traverse"><h3><code class="language-ruby">def traverse(level = 0, &amp;block)</code></h3><p>Traverse the tree.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>yields</strong>　<code class="syntax language-ruby">{|node, level| ...}</code></dt><dd><p>The node and the level relative to the given root.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def traverse(level = 0, &amp;block)
+	yield self, level
+	
+	@children&amp;.each do |child|
+		child.traverse(level + 1, &amp;block)
+	end
+end</code></pre>
+					</details></section><section id="Async::Node#terminate"><h3><code class="language-ruby">def terminate</code></h3><p>Immediately terminate all children tasks, including transient tasks.
+Internally invokes <code>stop(false)</code> on all children.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def terminate
+	# Attempt to stop the current task immediately, and all children:
+	stop(false)
+	
+	# If that doesn't work, take more serious action:
+	@children&amp;.each do |child|
+		child.terminate
+	end
+end</code></pre>
+					</details></section><section id="Async::Node#stop"><h3><code class="language-ruby">def stop(later = false)</code></h3><p>Attempt to stop the current node immediately, including all non-transient children.
+Invokes <code class="language-ruby">#stop_children</code> to stop all children.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">later</code>　<code class="language-ruby">Boolean</code></dt><dd><p>Whether to defer stopping until some point in the future.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def stop(later = false)
+	# The implementation of this method may defer calling `stop_children`.
+	stop_children(later)
+end</code></pre>
+					</details></section>	</section>
+	
+	<section>
+<h2>Discussion</h2>
+<script src="https://giscus.app/client.js" data-repo="socketry/async" data-repo-id="MDEwOlJlcG9zaXRvcnk4NzM4MDQ4Mw==" data-category="Documentation" data-category-id="DIC_kwDOBTVSA84B-XEu" data-mapping="title" data-reactions-enabled="0" data-emit-metadata="0" data-theme="preferred_color_scheme" crossorigin="anonymous" async>
+</script>
+</section>
+
+
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>

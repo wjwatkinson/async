@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Async::Scheduler</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../../_components/jquery/jquery.min.js"></script>
+		<script src="../../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		
+		<script src="../../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//<![CDATA[
+			jQuery(function($) {
+				$.syntax();
+			});
+		//]]>
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../../index.html">Project</a> › <a class="link" href="../../index.html">Source</a></header>
+		
+		<main>
+			
+	<h1><code class="language-ruby">Async::Scheduler</code></h1>
+	
+	<p>Handles scheduling of fibers. Implements the fiber scheduler interface.</p>
+	
+	
+	
+	
+	<section>
+	<h2>Definitions</h2>
+	
+	<section id="Async::Scheduler.supported?"><h3><code class="language-ruby">def self.supported?</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+<p>Whether the fiber scheduler is supported.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def self.supported?
+	true
+end</code></pre>
+					</details></section><section id="Async::Scheduler#close"><h3><code class="language-ruby">def close</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def close
+	# This is a critical step. Because tasks could be stored as instance variables, and since the reactor is (probably) going out of scope, we need to ensure they are stopped. Otherwise, the tasks will belong to a reactor that will never run again and are not stopped.
+	self.terminate
+	
+	Kernel::raise &quot;Closing scheduler with blocked operations!&quot; if @blocked &gt; 0
+	
+	# We depend on GVL for consistency:
+	# @guard.synchronize do
+	
+	@selector&amp;.close
+	@selector = nil
+	
+	# end
+	
+	consume
+end</code></pre>
+					</details></section><section id="Async::Scheduler#closed?"><h3><code class="language-ruby">def closed?</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt><dd><p>Whether the scheduler has been closed.</p>
+</dd><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def closed?
+	@selector.nil?
+end</code></pre>
+					</details></section><section id="Async::Scheduler#interrupt"><h3><code class="language-ruby">def interrupt</code></h3><p>Interrupt the event loop and cause it to exit.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def interrupt
+	@interrupted = true
+	@selector.wakeup
+end</code></pre>
+					</details></section><section id="Async::Scheduler#transfer"><h3><code class="language-ruby">def transfer</code></h3><p>Transfer from the calling fiber to the event loop.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def transfer
+	@selector.transfer
+end</code></pre>
+					</details></section><section id="Async::Scheduler#yield"><h3><code class="language-ruby">def yield</code></h3><p>Yield the current fiber and resume it on the next iteration of the event loop.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def yield
+	@selector.yield
+end</code></pre>
+					</details></section><section id="Async::Scheduler#push"><h3><code class="language-ruby">def push(fiber)</code></h3><p>Schedule a fiber (or equivalent object) to be resumed on the next loop through the reactor.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">fiber</code>　<code class="language-ruby">Fiber | Object</code></dt><dd><p>The object to be resumed on the next iteration of the run-loop.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def push(fiber)
+	@selector.push(fiber)
+end</code></pre>
+					</details></section><section id="Async::Scheduler#block"><h3><code class="language-ruby">def block(blocker, timeout)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May only be called on same thread as fiber scheduler.">
+			asynchronous
+		</li>
+</ul>
+<p>Invoked when a fiber tries to perform a blocking operation which cannot continue. A corresponding call <a href="index.html#Async%3A%3AScheduler%23unblock" title="unblock"><code class="language-ruby">Async::Scheduler#unblock</code></a> must be performed to allow this fiber to continue.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May only be called on same thread as fiber scheduler.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def block(blocker, timeout)
+	# $stderr.puts &quot;block(#{blocker}, #{Fiber.current}, #{timeout})&quot;
+	fiber = Fiber.current
+	
+	if timeout
+		timer = @timers.after(timeout) do
+			if fiber.alive?
+				fiber.transfer(false)
+			end
+		end
+	end
+	
+	begin
+		@blocked += 1
+		@selector.transfer
+	ensure
+		@blocked -= 1
+	end
+ensure
+	timer&amp;.cancel
+end</code></pre>
+					</details></section><section id="Async::Scheduler#unblock"><h3><code class="language-ruby">def unblock(blocker, fiber)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be called from any thread.">
+			asynchronous
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be called from any thread.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def unblock(blocker, fiber)
+	# $stderr.puts &quot;unblock(#{blocker}, #{fiber})&quot;
+	
+	# This operation is protected by the GVL:
+	@selector.push(fiber)
+	@selector.wakeup
+end</code></pre>
+					</details></section><section id="Async::Scheduler#kernel_sleep"><h3><code class="language-ruby">def kernel_sleep(duration = nil)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def kernel_sleep(duration = nil)
+	if duration
+		self.block(nil, duration)
+	else
+		self.transfer
+	end
+end</code></pre>
+					</details></section><section id="Async::Scheduler#address_resolve"><h3><code class="language-ruby">def address_resolve(hostname)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def address_resolve(hostname)
+	::Resolv.getaddresses(hostname)
+end</code></pre>
+					</details></section><section id="Async::Scheduler#io_wait"><h3><code class="language-ruby">def io_wait(io, events, timeout = nil)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
+		</li>
+</ul>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def io_wait(io, events, timeout = nil)
+	fiber = Fiber.current
+	
+	if timeout
+		timer = @timers.after(timeout) do
+			fiber.raise(TimeoutError)
+		end
+	end
+	
+	# Console.logger.info(self, &quot;-&gt; io_wait&quot;, fiber, io, events)
+	events = @selector.io_wait(fiber, io, events)
+	# Console.logger.info(self, &quot;&lt;- io_wait&quot;, fiber, io, events)
+	
+	return events
+rescue TimeoutError
+	return false
+ensure
+	timer&amp;.cancel
+end</code></pre>
+					</details></section><section id="Async::Scheduler#process_wait"><h3><code class="language-ruby">def process_wait(pid, flags)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May be non-blocking..">
+			asynchronous
+		</li>
+</ul>
+<p>Wait for the specified process ID to exit.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">pid</code>　<code class="language-ruby">Integer</code></dt><dd><p>The process ID to wait for.</p>
+</dd><dt>
+					<strong>parameter</strong>　<code class="syntax">flags</code>　<code class="language-ruby">Integer</code></dt><dd><p>A bit-mask of flags suitable for <code>Process::Status.wait</code>.</p>
+</dd><dt>
+					<strong>returns</strong>　<code class="language-ruby">Process::Status</code></dt><dd><p>A process status instance.</p>
+</dd><dt>
+					<strong>asynchronous</strong></dt><dd><p>May be non-blocking..</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def process_wait(pid, flags)
+	return @selector.process_wait(Fiber.current, pid, flags)
+end</code></pre>
+					</details></section><section id="Async::Scheduler#run_once"><h3><code class="language-ruby">def run_once(timeout = nil)</code></h3><p>Run one iteration of the event loop.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">timeout</code>　<code class="language-ruby">Float | Nil</code></dt><dd><p>The maximum timeout, or if nil, indefinite.</p>
+</dd><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt><dd><p>Whether there is more work to do.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def run_once(timeout = nil)
+	Kernel::raise &quot;Running scheduler on non-blocking fiber!&quot; unless Fiber.blocking?
+	
+	# If we are finished, we stop the task tree and exit:
+	if self.finished?
+		return false
+	end
+	
+	interval = @timers.wait_interval
+	
+	# If there is no interval to wait (thus no timers), and no tasks, we could be done:
+	if interval.nil?
+		# Allow the user to specify a maximum interval if we would otherwise be sleeping indefinitely:
+		interval = timeout
+	elsif interval &lt; 0
+		# We have timers ready to fire, don't sleep in the selctor:
+		interval = 0
+	elsif timeout and interval &gt; timeout
+		interval = timeout
+	end
+	
+	begin
+		@selector.select(interval)
+	rescue Errno::EINTR
+		# Ignore.
+	end
+	
+	@timers.fire
+	
+	# The reactor still has work to do:
+	return true
+end</code></pre>
+					</details></section><section id="Async::Scheduler#run"><h3><code class="language-ruby">def run(...)</code></h3><p>Run the reactor until all tasks are finished. Proxies arguments to <code class="language-ruby">#async</code> immediately before entering the loop, if a block is provided.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def run(...)
+	Kernel::raise RuntimeError, 'Reactor has been closed' if @selector.nil?
+	
+	initial_task = self.async(...) if block_given?
+	
+	@interrupted = false
+	
+	while self.run_once
+		if @interrupted
+			break
+		end
+	end
+	
+	return initial_task
+ensure
+	Console.logger.debug(self) {&quot;Exiting run-loop because #{$! ? $! : 'finished'}.&quot;}
+end</code></pre>
+					</details></section><section id="Async::Scheduler#async"><h3><code class="language-ruby">def async(*arguments, **options, &amp;block)</code></h3><ul class="pragmas ">
+		<li class="pragma deprecated" title="With no replacement.">
+			deprecated
+		</li>
+</ul>
+<p>Start an asynchronous task within the specified reactor. The task will be
+executed until the first blocking call, at which point it will yield and
+and this method will return.</p>
+<p>This is the main entry point for scheduling asynchronus tasks.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>yields</strong>　<code class="syntax language-ruby">{|task| ...}</code></dt><dd><p>Executed within the task.</p>
+</dd><dt>
+					<strong>returns</strong>　<code class="language-ruby"><a href="../Task/index.html" title="Async::Task">Task</a></code></dt><dd><p>The task that was scheduled into the reactor.</p>
+</dd><dt>
+					<strong>deprecated</strong></dt><dd><p>With no replacement.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def async(*arguments, **options, &amp;block)
+	task = Task.new(Task.current? || self, **options, &amp;block)
+	
+	# I want to take a moment to explain the logic of this.
+	# When calling an async block, we deterministically execute it until the
+	# first blocking operation. We don't *have* to do this - we could schedule
+	# it for later execution, but it's useful to:
+	# - Fail at the point of the method call where possible.
+	# - Execute determinstically where possible.
+	# - Avoid scheduler overhead if no blocking operation is performed.
+	task.run(*arguments)
+	
+	# Console.logger.debug &quot;Initial execution of task #{fiber} complete (#{result} -&gt; #{fiber.alive?})...&quot;
+	return task
+end</code></pre>
+					</details></section><section id="Async::Scheduler#timeout_after"><h3><code class="language-ruby">def timeout_after(timeout, exception = TimeoutError, message = &quot;execution expired&quot;, &amp;block)</code></h3><p>Invoke the block, but after the specified timeout, raise <a href="../TimeoutError/index.html" title="TimeoutError"><code class="language-ruby">class Async::TimeoutError</code></a> in any currenly blocking operation. If the block runs to completion before the timeout occurs or there are no non-blocking operations after the timeout expires, the code will complete without any exception.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">duration</code>　<code class="language-ruby">Numeric</code></dt><dd><p>The time in seconds, in which the task should complete.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def timeout_after(timeout, exception = TimeoutError, message = &quot;execution expired&quot;, &amp;block)
+	fiber = Fiber.current
+	
+	timer = @timers.after(timeout) do
+		if fiber.alive?
+			fiber.raise(exception, message)
+		end
+	end
+	
+	yield timer
+ensure
+	timer.cancel if timer
+end</code></pre>
+					</details></section>	</section>
+	
+	<section>
+<h2>Discussion</h2>
+<script src="https://giscus.app/client.js" data-repo="socketry/async" data-repo-id="MDEwOlJlcG9zaXRvcnk4NzM4MDQ4Mw==" data-category="Documentation" data-category-id="DIC_kwDOBTVSA84B-XEu" data-mapping="title" data-reactions-enabled="0" data-emit-metadata="0" data-theme="preferred_color_scheme" crossorigin="anonymous" async>
+</script>
+</section>
+
+
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>

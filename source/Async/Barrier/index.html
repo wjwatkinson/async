@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Async::Barrier</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../../_components/jquery/jquery.min.js"></script>
+		<script src="../../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		
+		<script src="../../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//<![CDATA[
+			jQuery(function($) {
+				$.syntax();
+			});
+		//]]>
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../../index.html">Project</a> › <a class="link" href="../../index.html">Source</a></header>
+		
+		<main>
+			
+	<h1><code class="language-ruby">Async::Barrier</code></h1>
+	
+	<p>A synchronization primitive, which allows one task to wait for a number of other tasks to complete. It can be used in conjunction with <a href="../Semaphore/index.html" title="Semaphore"><code class="language-ruby">class Async::Semaphore</code></a>.</p>
+<section id="example"><h2>Example</h2>
+<pre><code class="language-ruby">require 'async'
+require 'async/barrier'
+
+Sync do
+	barrier = Async::Barrier.new
+	
+	# Generate an array of 10 numbers:
+	numbers = 10.times.map{rand(10)}
+	sorted = []
+	
+	# Sleep sort the numbers:
+	numbers.each do |number|
+		barrier.async do |task|
+			task.sleep(number)
+			sorted &lt;&lt; number
+		end
+	end
+	
+	# Wait for all the numbers to be sorted:
+	barrier.wait
+	
+	Console.logger.info(&quot;Sorted&quot;, sorted)
+end
+</code></pre>
+</section><section id="output"><h3>Output</h3>
+<pre><code>0.0s     info: Sorted [ec=0x104] [pid=50291]
+						 | [0, 0, 0, 0, 1, 2, 2, 3, 6, 6]
+</code></pre>
+</section>	
+	<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+
+	
+	
+	<section>
+	<h2>Definitions</h2>
+	
+	<section id="Async::Barrier#initialize"><h3><code class="language-ruby">def initialize(parent: nil)</code></h3><ul class="pragmas ">
+		<li class="pragma public" title="Since `stable-v1`.">
+			public
+		</li>
+</ul>
+<p>Initialize the barrier.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">parent</code>　<code class="language-ruby">Task | Semaphore | Nil</code></dt><dd><p>The parent for holding any children tasks.</p>
+</dd><dt>
+					<strong>public</strong></dt><dd><p>Since <code>stable-v1</code>.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def initialize(parent: nil)
+	@tasks = []
+	
+	@parent = parent
+end</code></pre>
+					</details></section><section id="Async::Barrier#tasks"><h3><code class="language-ruby">attr :tasks</code></h3><p>All tasks which have been invoked into the barrier.</p>
+</section><section id="Async::Barrier#size"><h3><code class="language-ruby">def size</code></h3><p>The number of tasks currently held by the barrier.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def size
+	@tasks.size
+end</code></pre>
+					</details></section><section id="Async::Barrier#async"><h3><code class="language-ruby">def async(*arguments, parent: (@parent or Task.current), **options, &amp;block)</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="Executes the given block concurrently.">
+			asynchronous
+		</li>
+</ul>
+<p>Execute a child task and add it to the barrier.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>Executes the given block concurrently.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def async(*arguments, parent: (@parent or Task.current), **options, &amp;block)
+	task = parent.async(*arguments, **options, &amp;block)
+	
+	@tasks &lt;&lt; task
+	
+	return task
+end</code></pre>
+					</details></section><section id="Async::Barrier#empty?"><h3><code class="language-ruby">def empty?</code></h3><p>Whether there are any tasks being held by the barrier.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Boolean</code></dt></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def empty?
+	@tasks.empty?
+end</code></pre>
+					</details></section><section id="Async::Barrier#wait"><h3><code class="language-ruby">def wait</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="Will wait for tasks to finish executing.">
+			asynchronous
+		</li>
+</ul>
+<p>Wait for all tasks.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>Will wait for tasks to finish executing.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def wait
+	# TODO: This would be better with linked list.
+	while @tasks.any?
+		task = @tasks.first
+		
+		begin
+			task.wait
+		ensure
+			# Remove the task from the waiting list if it's finished:
+			@tasks.shift if @tasks.first == task
+		end
+	end
+end</code></pre>
+					</details></section><section id="Async::Barrier#stop"><h3><code class="language-ruby">def stop</code></h3><ul class="pragmas ">
+		<li class="pragma asynchronous" title="May wait for tasks to finish executing.">
+			asynchronous
+		</li>
+</ul>
+<p>Stop all tasks held by the barrier.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>asynchronous</strong></dt><dd><p>May wait for tasks to finish executing.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def stop
+	# We have to be careful to avoid enumerating tasks while adding/removing to it:
+	tasks = @tasks.dup
+	tasks.each(&amp;:stop)
+end</code></pre>
+					</details></section>	</section>
+	
+	<section>
+<h2>Discussion</h2>
+<script src="https://giscus.app/client.js" data-repo="socketry/async" data-repo-id="MDEwOlJlcG9zaXRvcnk4NzM4MDQ4Mw==" data-category="Documentation" data-category-id="DIC_kwDOBTVSA84B-XEu" data-mapping="title" data-reactions-enabled="0" data-emit-metadata="0" data-theme="preferred_color_scheme" crossorigin="anonymous" async>
+</script>
+</section>
+
+
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>

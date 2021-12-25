@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Async::Wrapper</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../../_components/jquery/jquery.min.js"></script>
+		<script src="../../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		
+		<script src="../../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//<![CDATA[
+			jQuery(function($) {
+				$.syntax();
+			});
+		//]]>
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../../index.html">Project</a> › <a class="link" href="../../index.html">Source</a></header>
+		
+		<main>
+			
+	<h1><code class="language-ruby">Async::Wrapper</code></h1>
+	
+	<p>Represents an asynchronous IO within a reactor.</p>
+	
+	<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>deprecated</strong></dt><dd><p>With no replacement. Prefer native interfaces.</p>
+</dd></dl>
+</details>
+
+	
+	<section>
+	<h2>Nested</h2>
+	
+	<ul>
+		<li><a href="Cancelled/index.html"><code class="language-ruby">Async::Wrapper::Cancelled</code></a></li>
+	</ul>
+	</section>
+	
+	<section>
+	<h2>Definitions</h2>
+	
+	<section id="Async::Wrapper#initialize"><h3><code class="language-ruby">def initialize(io, reactor = nil)</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">reactor</code>　<code class="language-ruby"><a href="../Reactor/index.html" title="Async::Reactor">Reactor</a></code></dt><dd><p>the reactor that is managing this wrapper, or not specified, it's looked up by way of <a href="../Task/index.html#Async%3A%3ATask.current" title="Task.current"><code class="language-ruby">Async::Task.current</code></a>.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def initialize(io, reactor = nil)
+	@io = io
+	@reactor = reactor
+	
+	@timeout = nil
+end</code></pre>
+					</details></section><section id="Async::Wrapper#io"><h3><code class="language-ruby">attr :io</code></h3><p>The underlying native <code>io</code>.</p>
+</section><section id="Async::Wrapper#wait_readable"><h3><code class="language-ruby">def wait_readable(timeout = @timeout)</code></h3><p>Wait for the io to become readable.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def wait_readable(timeout = @timeout)
+	@io.to_io.wait_readable(timeout) or raise TimeoutError
+end</code></pre>
+					</details></section><section id="Async::Wrapper#wait_priority"><h3><code class="language-ruby">def wait_priority(timeout = @timeout)</code></h3><p>Wait for the io to become writable.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def wait_priority(timeout = @timeout)
+	@io.to_io.wait_priority(timeout) or raise TimeoutError
+end</code></pre>
+					</details></section><section id="Async::Wrapper#wait_writable"><h3><code class="language-ruby">def wait_writable(timeout = @timeout)</code></h3><p>Wait for the io to become writable.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def wait_writable(timeout = @timeout)
+	@io.to_io.wait_writable(timeout) or raise TimeoutError
+end</code></pre>
+					</details></section><section id="Async::Wrapper#wait_any"><h3><code class="language-ruby">def wait_any(timeout = @timeout)</code></h3><p>Wait fo the io to become either readable or writable.</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>parameter</strong>　<code class="syntax">duration</code>　<code class="language-ruby">Float</code></dt><dd><p>timeout after the given duration if not <code>nil</code>.</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def wait_any(timeout = @timeout)
+	@io.wait_any(timeout) or raise TimeoutError
+end</code></pre>
+					</details></section><section id="Async::Wrapper#close"><h3><code class="language-ruby">def close</code></h3><p>Close the io and monitor.</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def close
+	@io.close
+end</code></pre>
+					</details></section>	</section>
+	
+	<section>
+<h2>Discussion</h2>
+<script src="https://giscus.app/client.js" data-repo="socketry/async" data-repo-id="MDEwOlJlcG9zaXRvcnk4NzM4MDQ4Mw==" data-category="Documentation" data-category-id="DIC_kwDOBTVSA84B-XEu" data-mapping="title" data-reactions-enabled="0" data-emit-metadata="0" data-theme="preferred_color_scheme" crossorigin="anonymous" async>
+</script>
+</section>
+
+
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>
